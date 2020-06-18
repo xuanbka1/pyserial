@@ -1,0 +1,49 @@
+import serial
+import threading
+import time
+
+comPort = None
+
+
+def TransmitThread():
+    while comPort:
+        if comPort:
+            print("input is:")
+            stringInput = input()
+            stringInput.join("\n\r")
+            comPort.write(stringInput.encode())
+            time.sleep(0.0005)
+
+
+def ReceiveThread():
+    while comPort:
+        if comPort.inWaiting() > 0:
+            c = comPort.readline()
+            print(c)
+        else:
+            time.sleep(0.0005)
+
+
+def LoopbackTest(comPortName):
+    global comPort
+
+    comPort = serial.Serial(
+        port=comPortName,
+        baudrate=9600,
+        parity=serial.PARITY_NONE,
+        stopbits=serial.STOPBITS_ONE,
+        bytesize=serial.EIGHTBITS
+    )
+
+    threading.Thread(target=TransmitThread).start()
+    threading.Thread(target=ReceiveThread).start()
+
+    try:
+        while True:
+            time.sleep(1)
+    except:
+        comPort = None
+
+
+if __name__ == "__main__":
+    LoopbackTest("COM6")
