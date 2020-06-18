@@ -5,7 +5,7 @@
 # (C) 2002-2016 Chris Liechti <cliechti@gmx.net>
 #
 # SPDX-License-Identifier:    BSD-3-Clause
-
+# add run commandline
 import sys
 import socket
 import serial
